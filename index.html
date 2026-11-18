@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cuentas Claras · Plantilla de Excel de presupuesto y ahorro para España</title>
+<meta name="description" content="Plantilla de Excel para España: sabe cuánto apartar cada mes para el IBI, los seguros, la vuelta al cole y la Navidad. Pagas extra, huchas y cuentas en pareja. Pago único de 14,90 €.">
+<meta property="og:title" content="Cuentas Claras · Que ningún recibo te pille por sorpresa">
+<meta property="og:description" content="Plantilla de Excel de presupuesto y ahorro pensada para España. Pago único de 14,90 €.">
+<meta property="og:image" content="img/og.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="img/logo.png">
+<style>
+:root{
+  --verde:#5FA58B; --verde-osc:#2E6B4F; --menta:#E8EFEB; --menta-2:#F3F7F5;
+  --melocoton:#FFF4E8; --tinta:#1F2A26; --gris:#5B6762; --linea:#D9E3DE; --rojo:#B5443A;
+  --radio:18px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;color:var(--tinta);background:#FCFDFC;line-height:1.55;font-size:17px;-webkit-font-smoothing:antialiased}
+img,video{max-width:100%;height:auto;display:block}
+a{color:var(--verde-osc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section{padding:64px 0}
+h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
+h1{font-size:clamp(34px,7.5vw,58px);font-weight:800}
+h2{font-size:clamp(27px,5.2vw,40px);font-weight:800;margin-bottom:14px}
+h3{font-size:19px;font-weight:700}
+.sub{color:var(--gris);font-size:clamp(17px,2.4vw,20px);max-width:640px}
+.eyebrow{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--verde-osc);background:var(--menta);padding:6px 12px;border-radius:999px;margin-bottom:18px}
+
+/* Barra superior */
+.top{position:sticky;top:0;z-index:20;background:rgba(252,253,252,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--linea)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.marca{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;text-decoration:none;color:var(--tinta)}
+.marca img{width:32px;height:32px;border-radius:9px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--verde-osc);color:#fff;text-decoration:none;font-weight:700;border-radius:999px;padding:16px 28px;font-size:18px;transition:transform .15s,background .15s;border:0;cursor:pointer}
+.btn:hover{background:#245A42;transform:translateY(-1px)}
+.btn.peq{padding:10px 18px;font-size:15px}
+.btn.claro{background:#fff;color:var(--verde-osc)}
+.nota{font-size:14px;color:var(--gris);margin-top:12px}
+
+/* Portada */
+.hero{overflow:hidden;padding:44px 0 56px;background:linear-gradient(180deg,var(--menta-2),#FCFDFC)}
+.hero .grid{display:grid;gap:36px;align-items:center}
+.hero h1 span{color:var(--verde-osc)}
+.hero .sub{margin:18px 0 26px}
+.precio{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+.precio b{font-size:32px;font-weight:800}
+.precio small{color:var(--gris);font-size:15px}
+.portatil{position:relative;margin:0 auto;max-width:640px;width:100%}
+.portatil .pantalla{background:#1E2321;border-radius:16px 16px 4px 4px;padding:10px;box-shadow:0 30px 60px -25px rgba(31,42,38,.45)}
+.portatil .pantalla img{border-radius:6px}
+.portatil .base{height:14px;background:linear-gradient(#D5DBD8,#B9C1BD);border-radius:0 0 18px 18px;margin:0 -3%;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.chips span{background:#fff;border:1px solid var(--linea);border-radius:999px;padding:6px 12px;font-size:14px;color:var(--gris)}
+
+/* Problema */
+.tarjetas{display:grid;gap:16px;margin-top:28px}
+.tarjeta{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);padding:22px}
+.tarjeta .emoji{font-size:30px;margin-bottom:8px}
+.tarjeta p{color:var(--gris);margin-top:6px}
+.giro{margin-top:30px;background:var(--verde-osc);color:#fff;border-radius:var(--radio);padding:24px;font-size:19px;font-weight:600}
+.giro b{color:#BFE6D5}
+
+/* Cómo funciona */
+.como{background:var(--menta-2)}
+.como .grid{display:grid;gap:36px;align-items:center}
+.pasos{list-style:none;counter-reset:p;display:grid;gap:18px;margin-top:24px}
+.pasos li{counter-increment:p;display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.pasos li::before{content:counter(p);width:44px;height:44px;border-radius:50%;background:var(--verde);color:#fff;font-weight:800;display:grid;place-items:center;font-size:19px}
+.pasos p{color:var(--gris)}
+.movil{max-width:300px;margin:0 auto;border-radius:34px;padding:10px;background:#1E2321;box-shadow:0 30px 60px -25px rgba(31,42,38,.5)}
+.movil video{border-radius:26px;width:100%;aspect-ratio:9/16;background:#000}
+.pie-video{text-align:center;font-size:14px;color:var(--gris);margin-top:12px}
+
+/* Qué incluye */
+.hojas{display:grid;gap:22px;margin-top:30px}
+.hoja{background:#fff;border:1px solid var(--linea);border-radius:var(--radio);overflow:hidden}
+.hoja figure{background:var(--menta-2);border-bottom:1px solid var(--linea)}
+.hoja figure img{width:100%;height:auto}
+.hoja div{padding:18px 20px 22px}
+.hoja p{color:var(--gris);margin-top:6px}
+.hoja.destacada{border:2px solid var(--verde)}
+.hoja .etiqueta{display:inline-block;background:var(--melocoton);color:#9A5A1E;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.extras{margin-top:26px;display:grid;gap:10px}
+.extras li{list-style:none;padding-left:30px;position:relative}
+.extras li::before{content:"✓";position:absolute;left:0;top:0;color:var(--verde-osc);font-weight:800}
+
+/* Para quién */
+.dos{display:grid;gap:16px;margin-top:26px}
+.caja{border-radius:var(--radio);padding:22px 22px 18px}
+.caja.si{background:var(--menta)}
+.caja.no{background:var(--melocoton)}
+.caja ul{margin-top:10px;display:grid;gap:8px;list-style:none}
+.caja li{padding-left:28px;position:relative}
+.caja.si li::before{content:"✓";position:absolute;left:0;color:var(--verde-osc);font-weight:800}
+.caja.no li::before{content:"✕";position:absolute;left:0;color:#9A5A1E;font-weight:800}
+
+/* Preguntas */
+.faq{margin-top:22px;border-top:1px solid var(--linea)}
+.faq details{border-bottom:1px solid var(--linea);padding:18px 0}
+.faq summary{cursor:pointer;font-weight:700;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:24px;line-height:1;color:var(--verde-osc);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{color:var(--gris);margin-top:10px;max-width:720px}
+
+/* Cierre */
+.cierre{background:var(--verde-osc);color:#fff;text-align:center;border-radius:28px;padding:48px 22px;margin:0 0 20px}
+.cierre h2{color:#fff}
+.cierre p{color:#D7EDE3;max-width:560px;margin:0 auto 26px}
+.cierre .nota{color:#BFE6D5}
+footer{padding:28px 0 90px;color:var(--gris);font-size:14px;text-align:center}
+footer a{color:var(--gris)}
+
+/* Botón fijo en móvil */
+.fijo{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;display:flex;transform:translateY(140%);transition:transform .25s}
+.fijo.ver{transform:none}
+.fijo .btn{width:100%;box-shadow:0 12px 30px -10px rgba(31,42,38,.5)}
+
+@media (min-width:760px){
+  section{padding:88px 0}
+  .hero{padding:64px 0 80px}
+  .hero .grid{grid-template-columns:1fr 1.15fr}
+  .tarjetas{grid-template-columns:repeat(3,1fr)}
+  .como .grid{grid-template-columns:1.2fr .8fr}
+  .hojas{grid-template-columns:1fr 1fr}
+  .hoja.ancha{grid-column:1/-1}
+  .hoja:not(.ancha) figure{aspect-ratio:16/10;overflow:hidden}
+  .hoja:not(.ancha) figure img{width:100%;height:100%;object-fit:cover;object-position:left top}
+  .dos{grid-template-columns:1fr 1fr}
+  .fijo{display:none}
+  footer{padding-bottom:36px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="marca" href="#"><img src="img/logo.png" alt="">Cuentas Claras</a>
+    <a class="btn peq comprar" href="https://soriabloom2.gumroad.com/l/cuentas-claras?wanted=true">Comprar · 14,90 €</a>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap grid">
+    <div>
+      <span class="eyebrow">Plantilla de Excel · España</span>
+      <h1>Que ningún recibo te pille <span>por sorpresa</span>.</h1>
+      <p class="sub">La cuesta de enero, el IBI, el seguro del coche, la vuelta al cole… Cuentas Claras te dice <b>cuánto apartar cada mes</b> para que, cuando llegue el recibo, el dinero ya esté ahí.</p>
+      <div class="precio"><b>14,90 €</b><small>IVA incluido · pago único</small></div>
+      <a class="btn comprar" id="cta-hero" href="https://soriabloom2.gumroad.com/l/cuentas-claras?wanted=true">Quiero la plantilla</a>
+      <p class="nota">Descarga inmediata del Excel y el vídeo tutorial. Pago seguro con tarjeta o PayPal a través de Gumroad.</p>
+      <div class="chips"><span>Pagas extra</span><span>Gastos anuales</span><span>Huchas</span><span>Cuentas en pareja</span><span>Reto 52 semanas</span></div>
+    </div>
+    <div class="portatil">
+      <div class="pantalla"><picture><source media="(max-width:759px)" srcset="img/inicio-m.webp" width="780" height="430"><img src="img/inicio.webp" width="1200" height="728" alt="Página de inicio de la plantilla: lo que ha entrado, lo gastado, lo ahorrado y lo que queda para gastar este mes"></picture></div>
+      <div class="base"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>El problema no es el día a día.<br>Son los sustos del año.</h2>
+    <p class="sub">La app del banco te enseña lo que ya has gastado. Lo que descuadra las cuentas es lo que todavía no ha llegado.</p>
+    <div class="tarjetas">
+      <div class="tarjeta"><div class="emoji">🥶</div><h3>La cuesta de enero</h3><p>Los regalos de Navidad, las rebajas y los recibos anuales se juntan en el mes más largo.</p></div>
+      <div class="tarjeta"><div class="emoji">🎒</div><h3>Septiembre</h3><p>Libros, material, el seguro y el IBI llegan a la vez, justo después de las vacaciones.</p></div>
+      <div class="tarjeta"><div class="emoji">💸</div><h3>Las pagas extra</h3><p>Entran en junio y diciembre y, sin plan, desaparecen antes de que te des cuenta.</p></div>
+    </div>
+    <p class="giro">Cuentas Claras mira <b>hacia delante</b>: reparte esos pagos entre los 12 meses y te dice una cifra, «este mes aparta 278 €», para que llegues a cada uno con la hucha llena.</p>
+  </div>
+</section>
+
+<section class="como">
+  <div class="wrap grid">
+    <div>
+      <h2>Así funciona</h2>
+      <p class="sub">Sin fórmulas ni configuraciones raras. Lo rellenas una vez y luego solo apuntas tus gastos.</p>
+      <ol class="pasos">
+        <li><div><h3>Pon tus números</h3><p>Nómina, número de pagas, presupuesto por categoría y los pagos que tienes una vez al año.</p></div></li>
+        <li><div><h3>Apunta lo que gastas</h3><p>Fecha, importe y categoría con listas desplegables. Un botón te lleva a la primera fila libre.</p></div></li>
+        <li><div><h3>Mira cuánto apartar</h3><p>La plantilla calcula lo que tienes que guardar cada mes y te avisa en rojo si algún mes no vas a llegar.</p></div></li>
+      </ol>
+    </div>
+    <div>
+      <div class="movil"><video src="img/reel-enero.mp4" poster="img/reel-enero.jpg" controls playsinline preload="none"></video></div>
+      <p class="pie-video">Vídeo de 37 segundos · con sonido</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Qué incluye</h2>
+    <p class="sub">Un archivo de Excel con 10 hojas conectadas entre sí, con datos de ejemplo para que veas cómo queda antes de poner los tuyos.</p>
+    <div class="hojas">
+      <article class="hoja destacada ancha">
+        <figure><picture><source media="(max-width:759px)" srcset="img/anuales-m.webp" width="705" height="455"><img src="img/anuales.webp" width="1200" height="566" loading="lazy" alt="Hoja de gastos anuales: cada pago del año con lo que hay que apartar cada mes y la hucha mes a mes"></picture></figure>
+        <div><span class="etiqueta">La que más ayuda</span><h3>Gastos anuales</h3><p>Apunta el IBI, los seguros, la ITV o la Navidad con el mes en que se pagan. Te dice cuánto apartar cada mes y cómo va la hucha: si algún mes sale en rojo, sabes con tiempo que no llegas.</p></div>
+      </article>
+      <article class="hoja">
+        <figure><picture><source media="(max-width:759px)" srcset="img/resumen-m.webp" width="740" height="330"><img src="img/resumen.webp" width="1108" height="563" loading="lazy" alt="Resumen del mes con presupuesto por categoría y barras de progreso"></picture></figure>
+        <div><h3>Resumen del mes</h3><p>Elige cualquier mes y mira, categoría por categoría, cuánto llevas gastado y cuánto te queda.</p></div>
+      </article>
+      <article class="hoja">
+        <figure><img src="img/huchas.webp" width="1200" height="519" loading="lazy" alt="Hoja de huchas con metas, fecha objetivo y cuánto apartar al mes"></figure>
+        <div><h3>Huchas</h3><p>Fondo de emergencia, vacaciones, el coche… Pones la meta y la fecha y te dice cuánto apartar al mes para llegar a tiempo.</p></div>
+      </article>
+      <article class="hoja">
+        <figure><img src="img/pareja.webp" width="690" height="728" loading="lazy" alt="Hoja de pareja que calcula quién debe a quién"></figure>
+        <div><h3>Pareja</h3><p>Gastos compartidos sin discusiones: a partes iguales o en proporción al sueldo, y te dice quién debe a quién.</p></div>
+      </article>
+      <article class="hoja">
+        <figure><picture><source media="(max-width:759px)" srcset="img/reto-m.webp" width="560" height="520"><img src="img/reto.webp" width="1200" height="591" loading="lazy" alt="Reto de las 52 semanas con casillas para marcar"></picture></figure>
+        <div><h3>Reto de las 52 semanas</h3><p>Cada semana apartas un poco más que la anterior. Marcas ✓ y ves cómo crece.</p></div>
+      </article>
+    </div>
+    <ul class="extras">
+      <li><b>También:</b> Inicio con gráficos, Movimientos (hasta 5.000), Tu año con las pagas extra, Tarjetas y deudas (cuándo terminas y cuánto pagas de intereses) y Ajustes.</li>
+      <li><b>Vídeo tutorial</b> de 3 minutos que te enseña a rellenarla paso a paso.</li>
+      <li>Hojas protegidas para que no rompas una fórmula sin querer. Solo escribes en las celdas de color melocotón.</li>
+    </ul>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>¿Es para ti?</h2>
+    <div class="dos">
+      <div class="caja si"><h3>Sí, si…</h3>
+        <ul>
+          <li>Cobras en España, con 12 o 14 pagas.</li>
+          <li>Te cuesta llegar a los pagos grandes del año.</li>
+          <li>Quieres ahorrar con un objetivo y una fecha.</li>
+          <li>Compartes gastos en pareja y queréis cuentas claras.</li>
+          <li>Prefieres tus datos en tu ordenador y no en una app más.</li>
+        </ul>
+      </div>
+      <div class="caja no"><h3>No, si…</h3>
+        <ul>
+          <li>Buscas una app para el móvil: es un Excel para usar en el ordenador.</li>
+          <li>Quieres que se conecte sola al banco: los movimientos se apuntan a mano.</li>
+          <li>No tienes Microsoft Excel (no está pensada para Google Sheets ni Numbers).</li>
+          <li>Buscas asesoramiento financiero: es una herramienta para organizarte.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Preguntas frecuentes</h2>
+    <div class="faq">
+      <details><summary>¿Qué necesito para usarla?</summary><p>Microsoft Excel en el ordenador (Microsoft 365 o Excel 2016 o posterior). Está hecha y probada en Excel para Windows. Google Sheets, Numbers y las versiones para móvil no son compatibles: se pierden el diseño y los botones.</p></details>
+      <details><summary>¿Cómo la recibo?</summary><p>Al pagar, Gumroad te manda un correo con el enlace de descarga del Excel y del vídeo tutorial. También puedes descargarlo en ese momento desde la página de compra.</p></details>
+      <details><summary>¿Es un pago único?</summary><p>Sí. Pagas 14,90 € (IVA incluido) una vez y la plantilla es tuya. Sin suscripciones.</p></details>
+      <details><summary>¿Cómo puedo pagar?</summary><p>Con tarjeta, Google Pay o PayPal, a través de Gumroad, la plataforma que gestiona el cobro, el IVA y la entrega del archivo. Esta web no guarda ningún dato de pago.</p></details>
+      <details><summary>¿Sirve si no tengo pagas extra?</summary><p>Sí. En Ajustes eliges 12 o 14 pagas y la plantilla se adapta.</p></details>
+      <details><summary>¿Mis datos van a algún sitio?</summary><p>No. Es un archivo de Excel que se queda en tu ordenador. No se conecta a internet ni a tu banco.</p></details>
+      <details><summary>¿Y si no me gusta?</summary><p>Al ser un producto digital que se descarga al momento, no se hacen devoluciones. Si el archivo no se abre o no funciona bien, escríbeme y lo soluciono. Por eso tienes en esta página capturas reales y un vídeo de cómo es antes de comprar.</p></details>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="cierre">
+      <h2>Este año, que no te pille nada.</h2>
+      <p>Una plantilla, una cifra al mes y los pagos grandes del año bajo control.</p>
+      <a class="btn claro comprar" href="https://soriabloom2.gumroad.com/l/cuentas-claras?wanted=true">Comprar por 14,90 €</a>
+      <p class="nota">IVA incluido · descarga inmediata · pago seguro con Gumroad</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>© 2026 Cuentas Claras · <a href="aviso-legal.html">Aviso legal y privacidad</a> · <a href="mailto:CORREO@PENDIENTE">Contacto</a></p>
+    <p style="margin-top:6px">Cuentas Claras es una herramienta para organizar tus finanzas, no asesoramiento financiero.</p>
+  </div>
+</footer>
+
+<div class="fijo" id="fijo"><a class="btn comprar" href="https://soriabloom2.gumroad.com/l/cuentas-claras?wanted=true">Comprar · 14,90 €</a></div>
+
+<script>
+// Botón fijo en móvil: aparece cuando el botón principal deja de verse
+(function(){
+  var cta=document.getElementById('cta-hero'), fijo=document.getElementById('fijo');
+  if(!('IntersectionObserver' in window)||!cta) return;
+  new IntersectionObserver(function(e){fijo.classList.toggle('ver',!e[0].isIntersecting);}).observe(cta);
+})();
+</script>
+<!-- Pago de Gumroad encima de la página (si no carga, los enlaces abren la ficha de Gumroad) -->
+<script src="https://gumroad.com/js/gumroad.js" async></script>
+</body>
+</html>
