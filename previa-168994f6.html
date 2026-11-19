@@ -492,5 +492,107 @@ footer a{color:var(--gris)}
 <script data-goatcounter="https://cuentasclaras.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!-- Pago de Gumroad encima de la página (si no carga, los enlaces abren la ficha de Gumroad) -->
 <script src="https://gumroad.com/js/gumroad.js" async></script>
+<!-- ===== Asistente de dudas (sin IA, sin datos enviados) ===== -->
+<style>
+#ayuda-btn{position:fixed;right:16px;bottom:16px;z-index:45;width:58px;height:58px;border-radius:50%;border:0;background:var(--verde-osc);color:#fff;font-size:26px;cursor:pointer;box-shadow:0 12px 28px -10px rgba(23,58,44,.7);display:grid;place-items:center;transition:transform .2s}
+#ayuda-btn:hover{transform:scale(1.06)}
+#ayuda-btn .punto{position:absolute;top:6px;right:6px;width:12px;height:12px;border-radius:50%;background:#F2A65A;border:2px solid #fff}
+#ayuda-btn.abierto .punto{display:none}
+@media (max-width:759px){#ayuda-btn{bottom:84px;right:14px;width:52px;height:52px;font-size:23px}}
+#ayuda{position:fixed;right:16px;bottom:86px;z-index:46;width:min(380px,calc(100vw - 24px));height:min(560px,calc(100vh - 120px));background:#fff;border-radius:22px;box-shadow:0 30px 70px -20px rgba(23,58,44,.55);display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(16px) scale(.98);pointer-events:none;transition:opacity .2s,transform .25s cubic-bezier(.2,.8,.2,1)}
+#ayuda.ver{opacity:1;transform:none;pointer-events:auto}
+@media (max-width:759px){#ayuda{right:12px;left:12px;width:auto;bottom:12px;height:min(600px,calc(100vh - 24px))}}
+#ayuda header{background:var(--verde-osc);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px}
+#ayuda header img{width:34px;height:34px;border-radius:10px;background:#fff}
+#ayuda header b{display:block;font-size:16px}
+#ayuda header small{color:#BFE6D5;font-size:12px}
+#ayuda header button{margin-left:auto;background:rgba(255,255,255,.15);border:0;color:#fff;width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer}
+#ayuda .msgs{flex:1;overflow-y:auto;padding:16px;background:var(--menta-2);display:flex;flex-direction:column;gap:10px}
+#ayuda .m{max-width:86%;padding:10px 13px;border-radius:16px;font-size:15px;line-height:1.45;animation:aparece .25s ease}
+#ayuda .m.bot{background:#fff;border:1px solid var(--linea);border-bottom-left-radius:4px;align-self:flex-start}
+#ayuda .m.yo{background:var(--verde-osc);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+#ayuda .m a{color:var(--verde-osc);font-weight:700}
+#ayuda .m.escribiendo{color:var(--gris)}
+#ayuda .m.escribiendo i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gris);margin:0 2px;animation:bote 1s infinite}
+#ayuda .m.escribiendo i:nth-child(2){animation-delay:.15s}#ayuda .m.escribiendo i:nth-child(3){animation-delay:.3s}
+@keyframes bote{50%{transform:translateY(-4px)}}
+@keyframes aparece{from{opacity:0;transform:translateY(6px)}}
+#ayuda .chips{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start}
+#ayuda .chips button{font:inherit;font-size:13px;background:#fff;border:1px solid var(--verde);color:var(--verde-osc);border-radius:999px;padding:6px 11px;cursor:pointer}
+#ayuda .chips button:hover{background:var(--menta)}
+#ayuda form{display:flex;gap:8px;padding:10px;border-top:1px solid var(--linea);background:#fff}
+#ayuda input{flex:1;font:inherit;font-size:16px;border:1px solid var(--linea);border-radius:999px;padding:10px 14px;outline:none}
+#ayuda input:focus{border-color:var(--verde)}
+#ayuda form button{border:0;background:var(--verde-osc);color:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;cursor:pointer}
+#ayuda .pie{font-size:11px;color:var(--gris);text-align:center;padding:0 10px 8px;background:#fff}
+@media (prefers-reduced-motion:reduce){#ayuda,#ayuda .m{transition:none;animation:none}}
+</style>
+
+<button id="ayuda-btn" type="button" aria-label="Abrir dudas" aria-expanded="false">💬<span class="punto"></span></button>
+<div id="ayuda" role="dialog" aria-label="Dudas sobre Cuentas Claras">
+  <header><img src="img/logo.png" alt=""><div><b>¿Tienes alguna duda?</b><small>Respuestas al momento</small></div><button type="button" id="ayuda-cerrar" aria-label="Cerrar">×</button></header>
+  <div class="msgs" id="ayuda-msgs" aria-live="polite"></div>
+  <form id="ayuda-form" autocomplete="off"><input id="ayuda-in" type="text" placeholder="Escribe tu pregunta…" aria-label="Tu pregunta" maxlength="200"><button type="submit" aria-label="Enviar">➤</button></form>
+  <div class="pie">Respuestas automáticas. Lo que escribes no se guarda ni se envía.</div>
+</div>
+
+<script>
+(function(){
+  var COMPRA='https://soriabloom2.gumroad.com/l/cuentas-claras?wanted=true', CORREO='cuentasclaras.es@outlook.es';
+  var R=[
+    {k:['mac','apple','macbook','imac','macos'], t:'Está hecha y probada en <b>Excel para Windows</b>. En Mac debería funcionar con Microsoft Excel (Microsoft 365 o 2016 en adelante), pero todavía no la he probado en Mac. Lo que no sirve es Numbers.'},
+    {k:['google','sheets','drive','numbers','libreoffice','openoffice','calc'], t:'Necesitas <b>Microsoft Excel</b>. En Google Sheets, Numbers o LibreOffice se pierden el diseño y los botones, así que no la recomiendo ahí.'},
+    {k:['movil','telefono','android','iphone','tablet','ipad','app'], t:'Es un Excel para usar en el <b>ordenador</b>. Se puede abrir con Excel en el móvil para consultar, pero para apuntar y verlo bien está pensada para pantalla grande. No es una app.'},
+    {k:['version','office','365','2016','2019','2021','excel','gratis','licencia'], t:'Funciona con Microsoft Excel de escritorio: <b>Microsoft 365 o Excel 2016 y posteriores</b>. Necesitas tener Excel; la plantilla no lo incluye.'},
+    {k:['recibo','recibe','descarga','descargar','llega','entrega','enlace','archivo','correo','email','mail'], t:'Al pagar, Gumroad te envía un <b>correo con el enlace de descarga</b> del Excel y del vídeo tutorial. También puedes descargarlo en ese momento desde la página de compra.'},
+    {k:['suscripcion','mensual','unico','renovar','cuota','siempre'], t:'Es un <b>pago único</b>: lo pagas una vez y la plantilla es tuya. Sin suscripciones.'},
+    {k:['pagar','pago','tarjeta','paypal','bizum','google pay','apple pay','transferencia'], t:'Puedes pagar con <b>tarjeta, Google Pay o PayPal</b> a través de Gumroad, que gestiona el cobro y la entrega. Bizum y transferencia no están disponibles.'},
+    {k:['iva','12,31','1231','impuesto','precio','cuesta','caro','euros','cuanto'], t:'Cuesta <b>14,90 € con IVA</b> si compras desde España. En la página de Gumroad verás 12,31 € y el IVA se añade al pagar. Desde otro país de la UE el total cambia un poco según su IVA.'},
+    {k:['devolucion','devolv','reembols','reembolso','garantia','gusta'], t:'Al ser un producto digital que se descarga al momento, <b>no se hacen devoluciones</b>. Si el archivo no se abre o no funciona bien, escribe a '+'<a href="mailto:'+CORREO+'">'+CORREO+'</a> y se soluciona. Antes de comprar puedes ver las capturas, la calculadora y el vídeo de esta página.'},
+    {k:['factura','justificante','ticket'], t:'Gumroad te envía un <b>recibo de la compra</b> por correo al pagar.'},
+    {k:['paga','pagas','extra','14','12','nomina','sueldo'], t:'Sí, tiene en cuenta las <b>pagas extra</b>: en Ajustes eliges si cobras 12 o 14 pagas y la plantilla se adapta, también si no tienes pagas extra.'},
+    {k:['anual','anuales','ibi','seguro','navidad','itv','colegio','apartar','hucha'], t:'En <b>Gastos anuales</b> apuntas los pagos de una vez al año (IBI, seguros, ITV, Navidad…) con su mes. Te dice <b>cuánto apartar cada mes</b> y cómo va la hucha, y te avisa en rojo si algún mes no llegas. Puedes probarlo arriba en la <a href="#calculadora">calculadora</a>.'},
+    {k:['pareja','compartir','compartido','novio','novia','marido','mujer','piso','companero'], t:'La hoja <b>Pareja</b> reparte los gastos comunes a partes iguales o en proporción al sueldo, y te dice quién debe a quién.'},
+    {k:['datos','privacidad','banco','conecta','internet','nube'], t:'Tus datos se quedan en tu ordenador: es un archivo de Excel que <b>no se conecta a internet ni a tu banco</b>. Los movimientos se apuntan a mano.'},
+    {k:['movimientos','cuantos','limite','anos','varios','años','filas'], t:'Caben <b>hasta 5.000 movimientos</b>, que dan para varios años de uso normal.'},
+    {k:['empresa','autonomo','negocio','facturacion','contabilidad'], t:'Está pensada para las <b>cuentas de casa</b> (personales o en pareja), no para la contabilidad de un negocio o de un autónomo.'},
+    {k:['dificil','facil','saber','tutorial','aprender','complicado','formulas'], t:'No hace falta saber Excel: solo escribes en las celdas de color y el resto se calcula solo. Incluye un <b>vídeo tutorial de 3 minutos</b>. Las hojas están protegidas para que no rompas nada sin querer.'},
+    {k:['ejemplo','datos de ejemplo','borrar','empezar'], t:'Viene con <b>datos de ejemplo</b> para que veas cómo funciona. Se borran en un momento y empiezas con los tuyos desde la hoja Ajustes.'},
+    {k:['hojas','incluye','trae','contiene','que tiene'], t:'Incluye 10 hojas: Inicio, Movimientos, Resumen del mes, Tu año, Ajustes, Gastos anuales, Huchas, Pareja, Tarjetas y deudas y Reto de las 52 semanas. Y el vídeo tutorial.'},
+    {k:['comprar','quiero','adquirir','donde'], t:'Puedes comprarla aquí: <a href="'+COMPRA+'">comprar por 14,90 €</a>.'},
+    {k:['hola','buenas','buenos'], t:'¡Hola! Pregúntame lo que quieras sobre la plantilla, o toca una de las preguntas de abajo.'},
+    {k:['gracias','vale','perfecto','genial'], t:'¡A ti! Si te surge otra duda, aquí estoy.'}
+  ];
+  var SUG=['¿Funciona en Mac?','¿Cómo la recibo?','¿Puedo pagar con PayPal?','¿Sirve para parejas?','¿Hay devoluciones?'];
+  function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿?¡!.,;:()]/g,' ');}
+  function busca(q){
+    var n=' '+norm(q)+' ', best=null, top=0;
+    R.forEach(function(r){ var p=0; r.k.forEach(function(k){ var kk=norm(k); if(kk.length<=3? n.indexOf(' '+kk+' ')>-1 : n.indexOf(kk)>-1) p+= kk.length>3?2:1; }); if(p>top){top=p;best=r;} });
+    return best;
+  }
+  var btn=document.getElementById('ayuda-btn'), box=document.getElementById('ayuda'), msgs=document.getElementById('ayuda-msgs'), f=document.getElementById('ayuda-form'), inp=document.getElementById('ayuda-in'), iniciado=false;
+  function msg(html,quien){ var d=document.createElement('div'); d.className='m '+quien; if(quien==='yo') d.textContent=html; else d.innerHTML=html; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight; return d; }
+  function chips(lista){ var c=document.createElement('div'); c.className='chips'; lista.forEach(function(s){ var b=document.createElement('button'); b.type='button'; b.textContent=s; b.onclick=function(){ c.remove(); pregunta(s); }; c.appendChild(b); }); msgs.appendChild(c); msgs.scrollTop=msgs.scrollHeight; }
+  function responde(html){ var e=msg('<i></i><i></i><i></i>','bot escribiendo'); setTimeout(function(){ e.remove(); msg(html,'bot'); }, 550); }
+  function pregunta(q){
+    msg(q,'yo'); var r=busca(q);
+    if(r) responde(r.t);
+    else responde('No tengo esa respuesta preparada. Escríbeme a <a href="mailto:'+CORREO+'">'+CORREO+'</a> y te contesto lo antes posible.');
+  }
+  function abre(on){
+    box.classList.toggle('ver',on); btn.classList.toggle('abierto',on); btn.setAttribute('aria-expanded',on); btn.textContent=on?'×':'💬';
+    if(!on){ var p=document.createElement('span'); p.className='punto'; btn.appendChild(p); }
+    if(on && !iniciado){ iniciado=true; msg('¡Hola! 👋 Soy el asistente de Cuentas Claras. ¿En qué te ayudo?','bot'); chips(SUG); }
+    if(on && window.matchMedia('(min-width:760px)').matches) setTimeout(function(){inp.focus();},250);
+  }
+  btn.addEventListener('click',function(){ abre(!box.classList.contains('ver')); });
+  document.getElementById('ayuda-cerrar').addEventListener('click',function(){ abre(false); });
+  f.addEventListener('submit',function(e){ e.preventDefault(); var q=inp.value.trim(); if(!q) return; inp.value=''; pregunta(q); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && box.classList.contains('ver')) abre(false); });
+  window.__ayudaBusca=busca;
+})();
+</script>
+<!-- ===== Fin asistente ===== -->
+
 </body>
 </html>
