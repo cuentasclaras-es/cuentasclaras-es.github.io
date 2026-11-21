@@ -584,7 +584,8 @@ footer a{color:var(--gris)}
   function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿?¡!.,;:()]/g,' ');}
   function busca(q){
     var n=' '+norm(q)+' ', best=null, top=0;
-    R.forEach(function(r){ var p=0; r.k.forEach(function(k){ var kk=norm(k); if(kk.length<=3? n.indexOf(' '+kk+' ')>-1 : n.indexOf(kk)>-1) p+= kk.length>3?2:1; }); if(p>top){top=p;best=r;} });
+    var largo=norm(q).trim().split(/\s+/).length>4;
+    R.forEach(function(r){ if(largo && (r.k[0]==='hola'||r.k[0]==='gracias')) return; var p=0; r.k.forEach(function(k){ var kk=norm(k); if(kk.length<=3? n.indexOf(' '+kk+' ')>-1 : n.indexOf(kk)>-1) p+= kk.length>3?2:1; }); if(p>top){top=p;best=r;} });
     return best;
   }
   var btn=document.getElementById('ayuda-btn'), box=document.getElementById('ayuda'), msgs=document.getElementById('ayuda-msgs'), f=document.getElementById('ayuda-form'), inp=document.getElementById('ayuda-in'), iniciado=false;
