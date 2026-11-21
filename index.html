@@ -488,6 +488,24 @@ footer a{color:var(--gris)}
 })();
 </script>
 <!-- Contador de visitas sin cookies (GoatCounter) -->
+<script>
+/* Medición: de dónde viene cada visita y cada clic en Comprar (GoatCounter, sin cookies) */
+(function(){
+  function q(n){var m=location.search.match(new RegExp('[?&]'+n+'=([^&#]*)'));return m?decodeURIComponent(m[1]).toLowerCase().replace(/[^a-z0-9_-]/g,''):''}
+  var src=q('utm_source')||q('ref')||'';
+  try{ if(src){sessionStorage.setItem('cc_src',src)} else {src=sessionStorage.getItem('cc_src')||''} }catch(e){}
+  if(!src){ var r=document.referrer||''; src=/instagram/.test(r)?'instagram':/facebook|fb\./.test(r)?'facebook':/youtube|youtu\.be/.test(r)?'youtube':/tiktok/.test(r)?'tiktok':/google/.test(r)?'google':r?'otra-web':'directo'; }
+  function ev(path,title){ var t=0;(function go(){ if(window.goatcounter&&window.goatcounter.count){window.goatcounter.count({path:path,title:title,event:true})} else if(t++<20){setTimeout(go,250)} })() }
+  function etiqueta(a){ if(a.dataset.ccOk)return; var u=a.getAttribute('href'); u+=(u.indexOf('?')<0?'?':'&')+'utm_source='+encodeURIComponent(src)+'&utm_medium=web&utm_campaign=landing'; a.setAttribute('href',u); a.dataset.ccOk='1'; }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href*="gumroad.com/l/"]');
+    if(a){ etiqueta(a); ev('comprar-'+src,'Clic en Comprar ('+src+')'); }
+    var c=e.target.closest&&e.target.closest('#cc-abrir, [aria-label="Abrir dudas"]');
+    if(c){ ev('dudas-'+src,'Abre el asistente ('+src+')'); }
+  },true);
+  document.querySelectorAll('a[href*="gumroad.com/l/"]').forEach(etiqueta);
+})();
+</script>
 <script data-goatcounter="https://cuentasclaras.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <!-- Pago de Gumroad encima de la página (si no carga, los enlaces abren la ficha de Gumroad) -->
 <script src="https://gumroad.com/js/gumroad.js" async></script>
