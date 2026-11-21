@@ -550,7 +550,7 @@ footer a{color:var(--gris)}
   <header><img src="img/logo.png" alt=""><div><b>¿Tienes alguna duda?</b><small>Respuestas al momento</small></div><button type="button" id="ayuda-cerrar" aria-label="Cerrar">×</button></header>
   <div class="msgs" id="ayuda-msgs" aria-live="polite"></div>
   <form id="ayuda-form" autocomplete="off"><input id="ayuda-in" type="text" placeholder="Escribe tu pregunta…" aria-label="Tu pregunta" maxlength="200"><button type="submit" aria-label="Enviar">➤</button></form>
-  <div class="pie">Respuestas automáticas. Lo que escribes no se guarda ni se envía.</div>
+  <div class="pie">Respuestas automáticas. Las preguntas se guardan de forma anónima para mejorar las respuestas; no escribas datos personales.</div>
 </div>
 
 <script>
@@ -591,8 +591,21 @@ footer a{color:var(--gris)}
   function msg(html,quien){ var d=document.createElement('div'); d.className='m '+quien; if(quien==='yo') d.textContent=html; else d.innerHTML=html; msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight; return d; }
   function chips(lista){ var c=document.createElement('div'); c.className='chips'; lista.forEach(function(s){ var b=document.createElement('button'); b.type='button'; b.textContent=s; b.onclick=function(){ c.remove(); pregunta(s); }; c.appendChild(b); }); msgs.appendChild(c); msgs.scrollTop=msgs.scrollHeight; }
   function responde(html){ var e=msg('<i></i><i></i><i></i>','bot escribiendo'); setTimeout(function(){ e.remove(); msg(html,'bot'); }, 550); }
+  function registra(q,r){
+    try{
+      var src=''; try{src=sessionStorage.getItem('cc_src')||''}catch(e){}
+      src=src||'directo';
+      var path, title;
+      if(r){ var tema=norm(r.k[0]).trim().replace(/[^a-z0-9]+/g,'-'); path='duda-'+tema; title='Duda: '+r.k[0]+' ('+src+')'; }
+      else {
+        var t=norm(q).replace(/\S+@\S+/g,'[correo]').replace(/\d{5,}/g,'[num]').replace(/\s+/g,' ').trim().slice(0,60);
+        path='duda-sin-respuesta/'+t.replace(/[^a-z0-9\[\] ]/g,'').replace(/ /g,'-'); title='Sin respuesta: '+t+' ('+src+')';
+      }
+      var n=0;(function go(){ if(window.goatcounter&&window.goatcounter.count){window.goatcounter.count({path:path,title:title,event:true})} else if(n++<20){setTimeout(go,250)} })();
+    }catch(e){}
+  }
   function pregunta(q){
-    msg(q,'yo'); var r=busca(q);
+    msg(q,'yo'); var r=busca(q); registra(q,r);
     if(r) responde(r.t);
     else responde('No tengo esa respuesta preparada. Escríbeme a <a href="mailto:'+CORREO+'">'+CORREO+'</a> y te contesto lo antes posible.');
   }
