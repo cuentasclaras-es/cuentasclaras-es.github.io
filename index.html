@@ -53,6 +53,13 @@ h3{font-size:19px;font-weight:700;letter-spacing:-.01em}
 .marca{flex:1 1 auto;overflow:hidden}.marca .nom{overflow:hidden;text-overflow:ellipsis}.top .btn{flex:none}
 @media (max-width:440px){.top .pt{display:none}.btn.peq{padding:10px 16px}}
 @media (max-width:330px){.marca span.nom{display:none}}
+/* Promoción Black Friday (se activa y se apaga sola por fecha) */
+.promo{display:none;background:var(--verde-noche);color:#fff;text-align:center;font-size:14.5px;font-weight:600;padding:8px 14px;line-height:1.3}
+.promo b{color:#FFD9A8}
+.hay-promo .promo{display:block}
+.hay-promo .hero{padding-top:156px}
+.antes{font-size:20px;font-weight:600;color:var(--gris);text-decoration:line-through}
+.etq-promo{background:var(--melocoton);color:#9A5A1E;font-weight:800;font-size:13px;padding:4px 10px;border-radius:999px}
 
 /* Portada */
 .hero{padding:120px 0 70px;background:radial-gradient(1100px 600px at 85% 0%,#DCEBE3 0%,rgba(220,235,227,0) 60%),radial-gradient(800px 500px at 0% 100%,#FFF1E2 0%,rgba(255,241,226,0) 60%),var(--menta-2);overflow:hidden}
@@ -237,6 +244,7 @@ footer a{color:var(--gris)}
 <body>
 
 <header class="top" id="top">
+  <div class="promo">🖤 Black Friday: <b>‑30 %</b> hasta el lunes 1 de diciembre · <b>10,43 €</b> en vez de 14,90 €</div>
   <div class="wrap">
     <a class="marca" href="#"><img src="img/logo.png" alt="Cuentas Claras" width="34" height="34"><span class="nom">Cuentas Claras</span></a>
     <a class="btn peq" href="https://soriabloom2.gumroad.com/l/cuentas-claras?wanted=true">Comprar<span class="pt"> · 14,90 €</span></a>
@@ -487,6 +495,23 @@ footer a{color:var(--gris)}
   dlg.addEventListener('click', function(e){ if(e.target===dlg) dlg.close(); });
 })();
 </script>
+<!-- Promoción Black Friday: código BLACKFRIDAY (-30 %) hasta el 1-12-2026 a las 23:59 de Madrid. Pasada la fecha no hace nada. -->
+<script>
+(function(){
+  var FIN=Date.parse('2026-12-01T22:59:00Z'), CODIGO='BLACKFRIDAY';
+  if(Date.now()>=FIN)return;
+  document.documentElement.classList.add('hay-promo');
+  function conCodigo(a){ var u=a.getAttribute('href')||''; if(u.indexOf('/l/cuentas-claras/'+CODIGO)>=0)return; a.setAttribute('href',u.replace('/l/cuentas-claras','/l/cuentas-claras/'+CODIGO)); }
+  document.querySelectorAll('a[href*="gumroad.com/l/cuentas-claras"]').forEach(conCodigo);
+  /* también los enlaces que cree después el asistente de dudas */
+  document.addEventListener('click',function(e){ var a=e.target.closest&&e.target.closest('a[href*="gumroad.com/l/cuentas-claras"]'); if(a)conCodigo(a); },true);
+  /* precios a la vista */
+  var p=document.querySelector('.hero .precio');
+  if(p)p.innerHTML='<b>10,43 €</b><span class="antes">14,90 €</span><span class="etq-promo">‑30 % Black Friday</span><small>IVA incluido · pago único · hasta el lunes 1-12</small>';
+  document.querySelectorAll('.top .pt').forEach(function(s){s.textContent=' · 10,43 €'});
+  document.querySelectorAll('a.btn').forEach(function(a){ a.childNodes.forEach(function(n){ if(n.nodeType===3&&n.nodeValue.indexOf('14,90 €')>=0)n.nodeValue=n.nodeValue.replace('14,90 €','10,43 €'); }); });
+})();
+</script>
 <!-- Contador de visitas sin cookies (GoatCounter) -->
 <script>
 /* Medición: de dónde viene cada visita y cada clic en Comprar (GoatCounter, sin cookies) */
@@ -564,7 +589,7 @@ footer a{color:var(--gris)}
     {k:['recibo','recibe','descarga','descargar','llega','entrega','enlace','archivo','correo','email','mail'], t:'Al pagar, Gumroad te envía un <b>correo con el enlace de descarga</b> del Excel y del vídeo tutorial. También puedes descargarlo en ese momento desde la página de compra.'},
     {k:['suscripcion','mensual','unico','renovar','cuota','siempre'], t:'Es un <b>pago único</b>: lo pagas una vez y la plantilla es tuya. Sin suscripciones.'},
     {k:['pagar','pago','tarjeta','paypal','bizum','google pay','apple pay','transferencia'], t:'Puedes pagar con <b>tarjeta, Google Pay o PayPal</b> a través de Gumroad, que gestiona el cobro y la entrega. Bizum y transferencia no están disponibles.'},
-    {k:['iva','12,31','1231','impuesto','precio','cuesta','caro','euros','cuanto'], t:'Cuesta <b>14,90 € con IVA</b> si compras desde España. En la página de Gumroad verás 12,31 € y el IVA se añade al pagar. Desde otro país de la UE el total cambia un poco según su IVA.'},
+    {k:['iva','12,31','1231','impuesto','precio','cuesta','caro','euros','cuanto'], t:(Date.now()<Date.parse('2026-12-01T22:59:00Z')?'<b>Black Friday: ‑30 % hasta el lunes 1-12</b>, se queda en <b>10,43 € con IVA</b> (el descuento ya va puesto en el botón de compra). ':'')+'Cuesta <b>14,90 € con IVA</b> si compras desde España. En la página de Gumroad verás 12,31 € y el IVA se añade al pagar. Desde otro país de la UE el total cambia un poco según su IVA.'},
     {k:['devolucion','devolv','reembols','reembolso','garantia','gusta'], t:'Al ser un producto digital que se descarga al momento, <b>no se hacen devoluciones</b>. Si el archivo no se abre o no funciona bien, escribe a '+'<a href="mailto:'+CORREO+'">'+CORREO+'</a> y se soluciona. Antes de comprar puedes ver las capturas, la calculadora y el vídeo de esta página.'},
     {k:['factura','justificante','ticket'], t:'Gumroad te envía un <b>recibo de la compra</b> por correo al pagar.'},
     {k:['paga','pagas','extra','14','12','nomina','sueldo'], t:'Sí, tiene en cuenta las <b>pagas extra</b>: en Ajustes eliges si cobras 12 o 14 pagas y la plantilla se adapta, también si no tienes pagas extra.'},
